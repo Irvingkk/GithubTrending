@@ -1,12 +1,50 @@
 import React from "react";
-import {StyleSheet, Text, View, Button} from "react-native";
+import { StyleSheet, Text, View, Button, TextInput, ScrollView } from "react-native";
 
 export default class FetchDemoPage extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state ={
+      showText: ''
+    }
+  }
+  loadData() {
+    let url = `https://api.github.com/search/repositories?q=${this.searchKey}`;
+    if (!this.searchKey) {
+      console.log('no input')
+    }
+    let result = '';
+    fetch(url)
+      .then(request => request.text())
+      .then(requestText => {
+        this.setState({
+          showText: requestText
+        })
+      })
+      .catch(e => {
+        console.log('network fail');
+        console.log(e);
+      })
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>FetchDemoPage</Text>
-        <Button title={} onPress={} />
+        <View style={styles.inputContainer}>
+          <TextInput style={styles.input}
+                     onChange={text => {
+                       this.searchKey = text;
+                     }} />
+          <Button title={'Search'} onPress={()=>{
+            this.loadData();
+          }} />
+        </View>
+        <ScrollView>
+          <Text>
+            {this.state.showText}
+          </Text>
+        </ScrollView>
       </View>
     )
   }
@@ -15,13 +53,22 @@ export default class FetchDemoPage extends React.Component{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF'
+    margin: 20
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10
+  },
+  input: {
+    height: 30,
+    width: 260,
+    borderColor: 'black',
+    borderWidth: 1,
+    marginRight: 10
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 })
