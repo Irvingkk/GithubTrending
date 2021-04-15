@@ -11,19 +11,28 @@ export default class FetchDemoPage extends React.Component{
   loadData() {
     let url = `https://api.github.com/search/repositories?q=${this.searchKey}`;
     if (!this.searchKey) {
-      console.log('no input')
+      this.setState({
+        showText: 'no input'
+      })
+      return;
     }
     let result = '';
     fetch(url)
-      .then(request => request.text())
+      .then(request => {
+        if (request.ok) {
+          return request.text();
+        }
+        throw new Error('request fail');
+      })
       .then(requestText => {
         this.setState({
           showText: requestText
         })
       })
       .catch(e => {
-        console.log('network fail');
-        console.log(e);
+        this.setState({
+          showText: e.toString()
+        })
       })
   }
 
