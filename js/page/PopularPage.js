@@ -54,10 +54,13 @@ class PopularTab extends React.Component {
       <View>
         <Text style={styles.welcome}>PopularPage</Text>
         {this.props.isZero && <Text style={styles.welcome} onPress={() => {
-          NavigationUtil.goTo({}, 'DetailPage')
+          NavigationUtil.goTo({navigation: this.props.navigation}, 'DetailPage')
         }}>jump to DetailPage</Text>}
         <Button title={'useFetch'} onPress={()=>{
-          NavigationUtil.goTo({}, 'FetchDemoPage');
+          NavigationUtil.goTo({navigation: this.props.navigation}, 'FetchDemoPage');
+        }} />
+        <Button title={'useAsyncStorage'} onPress={()=>{
+          NavigationUtil.goTo({navigation: this.props.navigation}, 'AsyncStorageDemoPage');
         }} />
       </View>
     )

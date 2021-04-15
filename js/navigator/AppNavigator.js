@@ -8,6 +8,7 @@ import FavoritePage from "../page/FavoritePage";
 import TrendingPage from "../page/TrendingPage";
 import DetailPage from "../page/DetailPage";
 import FetchDemoPage from "../page/FetchDemoPage";
+import AsyncStorageDemoPage from "../page/AsyncStorageDemoPage"
 
 const InitNavigator = createStackNavigator({
     WelcomePage: {
@@ -26,10 +27,22 @@ const MainNavigator = createStackNavigator({
     }
   },
   DetailPage: {
-    screen: DetailPage
+    screen: DetailPage,
+    navigationOptions: {
+      // headerShown: false
+    }
   },
   FetchDemoPage: {
-    screen: FetchDemoPage
+    screen: FetchDemoPage,
+    navigationOptions: {
+      // headerShown: false
+    }
+  },
+  AsyncStorageDemoPage: {
+    screen: AsyncStorageDemoPage,
+    navigationOptions: {
+      // headerShown: false
+    }
   }
 })
 
