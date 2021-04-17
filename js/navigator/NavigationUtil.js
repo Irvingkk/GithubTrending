@@ -5,7 +5,7 @@ export default class NavigationUtil {
    * @param page
    * @param navigation
    */
-  static goTo(params, page){
+  static goTo(page, params){
     const navigation = NavigationUtil.navigation;
     if (!navigation) {
       console.log('NavigationUtil.navigation can not be null')
