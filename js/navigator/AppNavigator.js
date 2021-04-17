@@ -9,6 +9,7 @@ import TrendingPage from "../page/TrendingPage";
 import DetailPage from "../page/DetailPage";
 import FetchDemoPage from "../page/FetchDemoPage";
 import AsyncStorageDemoPage from "../page/AsyncStorageDemoPage"
+import DataStoreDemoPage from "../page/DataStoreDemoPage"
 
 const InitNavigator = createStackNavigator({
     WelcomePage: {
@@ -40,6 +41,12 @@ const MainNavigator = createStackNavigator({
   },
   AsyncStorageDemoPage: {
     screen: AsyncStorageDemoPage,
+    navigationOptions: {
+      // headerShown: false
+    }
+  },
+  DataStoreDemoPage: {
+    screen: DataStoreDemoPage,
     navigationOptions: {
       // headerShown: false
     }
