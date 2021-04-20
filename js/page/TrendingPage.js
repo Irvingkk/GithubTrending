@@ -1,5 +1,14 @@
 import React from "react";
-import { Button, StyleSheet, Text, View, FlatList, RefreshControl, ActivityIndicator } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  RefreshControl,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import {createAppContainer} from "react-navigation";
 import {createMaterialTopTabNavigator} from "react-navigation-tabs";
 import NavigationUtil from "../navigator/NavigationUtil";
@@ -8,6 +17,8 @@ import { connect } from "react-redux";
 import TrendingItem from "../common/TrendingItem";
 import Toast, {DURATION} from 'react-native-easy-toast';
 import NavigationBar from "../common/NavigationBar";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import TrendingDialog, {TimeSpans} from "../common/TrendingDialog";
 
 const URL = 'https://github.com/trending/'
 const QUERY_TIME = '?since=daily';
@@ -18,6 +29,9 @@ export default class TrendingPage extends React.Component{
   constructor(props) {
     super(props);
     this.tabNames = ['python', 'ruby'];
+    this.state = {
+      timeSpan: TimeSpans[0],
+    }
   }
 
   _genTabs() {
@@ -33,17 +47,56 @@ export default class TrendingPage extends React.Component{
     return tabs;
   }
 
+  onSelectTimeSpan(tab) {
+    this.dialog.dismiss();
+    this.setState({
+      timeSpan: tab,
+    })
+    // this.tab.setNativeProps ={
+    //   timeSpan: tab
+    // }
+  }
+  renderTrendingDialog() {
+    return <TrendingDialog
+      ref={dialog=>this.dialog = dialog}
+      onSelect={(tab)=> this.onSelectTimeSpan(tab)}
+    />
+  }
+
+  renderTitleView() {
+    return (<View>
+        <TouchableOpacity
+          underlayColor={'transparent'}
+          onPress={()=> this.dialog.show()}
+        >
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={{
+              fontSize: 18,
+              color:'#FFFFFF',
+              fontWeight: '400'
+            }}>Trending {this.state.timeSpan.showText}</Text>
+            <MaterialIcons
+              name={'arrow-drop-down'}
+              size={22}
+              style={{color: 'white'}}
+            />
+          </View>
+        </TouchableOpacity>
+    </View>
+    )
+  }
+
+
   render() {
     let statusBar = {
       backgroundColor: THEME_COLOR,
       barStyle: 'light-content'
     }
     let navigationBar = <NavigationBar
-      title={'Trend'}
+      titleView={this.renderTitleView()}
       statusBar={statusBar}
       style={{backgroundColor: THEME_COLOR}}
     />
-
     const TabNavigator = createAppContainer(createMaterialTopTabNavigator(
       this._genTabs(),{
         tabBarOptions: {
@@ -62,6 +115,7 @@ export default class TrendingPage extends React.Component{
       <View style={styles.container} >
         {navigationBar}
         <TabNavigator />
+        {this.renderTrendingDialog()}
       </View>
     )
   }
@@ -72,6 +126,9 @@ class TrendingTab extends React.Component {
     super(props);
     const {tabLabel } = this.props;
     this.storeName = tabLabel;
+    this.state=({
+      timeSpan: TimeSpans[0]
+    })
     console.log('storeName:' + this.storeName);
   }
 
@@ -111,7 +168,8 @@ class TrendingTab extends React.Component {
   }
 
   getFetchURL(key) {
-    return URL + key + QUERY_TIME;
+    // console.log("QUERY_TIME, KEY" + QUERY_TIME + key);
+    return URL + key + '?since=daily';
   }
 
   renderItem(data) {

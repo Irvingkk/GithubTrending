@@ -34,7 +34,7 @@ export default class PopularItem extends React.Component {
                 style={{height: 22, width: 22}}
                 source={{uri: item.owner.avatar_url}} />
             </View>
-            <View style={styles.row}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text>Stars:</Text>
               <Text>{item.stargazers_count}</Text>
             </View>
