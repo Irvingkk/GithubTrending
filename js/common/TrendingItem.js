@@ -74,12 +74,12 @@ const styles = {
     alignItems: 'center'
   },
   title: {
-    frontSize: 16,
+    fontSize: 16,
     marginBottom: 2,
     color: '#212121'
   },
   description: {
-    frontSize: 14,
+    fontSize: 14,
     marginBottom: 2,
     color: '#757575'
   }
