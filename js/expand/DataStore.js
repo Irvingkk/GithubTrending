@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import Trending from "GitHubTrending"
+export const FLAG_STORAGE = {flag_popular: 'popular', flag_trending: 'trending'}
+const AUTO_TOKEN = 'fd82d1e882462e23b8e88aa82198f166';
 export default class DataStore {
   /**
    * save springified wraped data to local
@@ -29,36 +31,47 @@ export default class DataStore {
   /**
    * get JSON data from server
    * @param url
+   * @param flag
    * @returns {Promise<void>}
    */
-  async fetchNetData(url) {
-    fetch(url)
-      .then(request =>{
-        if(request.ok) {
-          return request.json();
-        }
-        throw new Error('network response is not ok');
-      })
-      .then(responseData => {
-        this.saveData(url, responseData);
-        return responseData;
-      }).catch(e=>{
+  async fetchNetData(url, flag) {
+    if (flag !== FLAG_STORAGE.flag_trending) {
+      fetch(url)
+        .then(request =>{
+          if(request.ok) {
+            return request.json();
+          }
+          throw new Error('network response is not ok');
+        })
+        .then(responseData => {
+          this.saveData(url, responseData);
+          return responseData;
+        }).catch(e=>{
         console.error(e.toString())
-    })
-
+      })
+    } else {
+      const trending = new Trending(AUTO_TOKEN);
+      const data = await trending.fetchTrending(url);
+      if (!data) {
+        throw new Error('responseData is null')
+      }
+      await this.saveData(url, data);
+      return data;
+    }
   }
 
-  async fetchData(url){
+  async fetchData(url, flag){
+    console.log('in fetch data: url and flag ' + url + '' +flag);
     try {
       const wrapData = await this.fetchLocalData(url);
       if (wrapData && this.checkTimestampValid(wrapData.timestamp)) {
         return wrapData;
       } else {
-        const responseData = await this.fetchNetData(url)
+        const responseData = await this.fetchNetData(url, flag)
         return this._wrapData(responseData);
       }
     } catch (e) {
-      const responseData = await this.fetchNetData(url)
+      const responseData = await this.fetchNetData(url, flag)
       return this._wrapData(responseData);
     }
   }
