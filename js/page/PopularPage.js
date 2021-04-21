@@ -122,7 +122,9 @@ class PopularTab extends React.Component {
       <PopularItem
         item={item}
         onSelect={()=> {
-
+          NavigationUtil.goTo('DetailPage', {
+            item: item,
+          })
         }}
       />
     )

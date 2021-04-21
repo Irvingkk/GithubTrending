@@ -8,10 +8,15 @@ export default class NavigationUtil {
   static goTo(page, params){
     const navigation = NavigationUtil.navigation;
     if (!navigation) {
-      console.log('NavigationUtil.navigation can not be null')
+      console.error('NavigationUtil.navigation can not be null')
     } else {
+      console.log(`go to page ${page} with params ${params}`);
       navigation.navigate(page, params);
     }
+  }
+
+  static goBack(navigation) {
+    navigation.goBack()
   }
 
   /**

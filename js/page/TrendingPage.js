@@ -8,6 +8,7 @@ import {
   RefreshControl,
   ActivityIndicator,
   TouchableOpacity,
+  DeviceEventEmitter
 } from "react-native";
 import {createAppContainer} from "react-navigation";
 import {createMaterialTopTabNavigator} from "react-navigation-tabs";
@@ -21,14 +22,14 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import TrendingDialog, {TimeSpans} from "../common/TrendingDialog";
 
 const URL = 'https://github.com/trending/'
-const QUERY_TIME = '?since=daily';
 const THEME_COLOR = '#678';
 const pageSize = 10;
+const EVENT_TYPE_TIME_SPAN_CHANGE = 'EVENT_TYPE_TIME_SPAN_CHANGE';
 
 export default class TrendingPage extends React.Component{
   constructor(props) {
     super(props);
-    this.tabNames = ['python', 'ruby'];
+    this.tabNames = ['python', 'c'];
     this.state = {
       timeSpan: TimeSpans[0],
     }
@@ -38,7 +39,7 @@ export default class TrendingPage extends React.Component{
     const tabs = {};
     this.tabNames.forEach((item, index)=>{
       tabs[`tab${index}`] = {
-        screen: props => <TrendingTabPage {...props} tabLabel={item}/>,
+        screen: props => <TrendingTabPage {...props} timeSpan={this.state.timeSpan} tabLabel={item}/>,
         navigationOptions: {
           tabBarLabel: item
         }
@@ -47,14 +48,12 @@ export default class TrendingPage extends React.Component{
     return tabs;
   }
 
-  onSelectTimeSpan(tab) {
+  onSelectTimeSpan(timeSpan) {
     this.dialog.dismiss();
     this.setState({
-      timeSpan: tab,
+      timeSpan: timeSpan,
     })
-    // this.tab.setNativeProps ={
-    //   timeSpan: tab
-    // }
+    DeviceEventEmitter.emit(EVENT_TYPE_TIME_SPAN_CHANGE, timeSpan);
   }
   renderTrendingDialog() {
     return <TrendingDialog
@@ -86,6 +85,26 @@ export default class TrendingPage extends React.Component{
     )
   }
 
+  _tabNav() {
+    if (!this.tabNav){ // optimize the timeSpan refreshing, only rerender child element,
+      // rather than rerender the whole tab navigation while timeSpan change.
+      this.tabNav = createAppContainer(createMaterialTopTabNavigator(
+        this._genTabs(),{
+          tabBarOptions: {
+            tabStyle: styles.tabStyle,
+            indicatorStyle: styles.indicatorStyle,
+            upperCaseLabel: false,
+            style: {
+              backgroundColor: '#a67'
+            },
+            scrollEnabled: true,
+            labelStyle: styles.labelStyle
+          }
+        }
+      ))
+    }
+    return this.tabNav;
+  }
 
   render() {
     let statusBar = {
@@ -97,20 +116,8 @@ export default class TrendingPage extends React.Component{
       statusBar={statusBar}
       style={{backgroundColor: THEME_COLOR}}
     />
-    const TabNavigator = createAppContainer(createMaterialTopTabNavigator(
-      this._genTabs(),{
-        tabBarOptions: {
-          tabStyle: styles.tabStyle,
-          indicatorStyle: styles.indicatorStyle,
-          upperCaseLabel: false,
-          style: {
-            backgroundColor: '#a67'
-          },
-          scrollEnabled: true,
-          labelStyle: styles.labelStyle
-        }
-      }
-    ))
+
+    const TabNavigator = this._tabNav();
     return (
       <View style={styles.container} >
         {navigationBar}
@@ -124,16 +131,25 @@ export default class TrendingPage extends React.Component{
 class TrendingTab extends React.Component {
   constructor(props) {
     super(props);
-    const {tabLabel } = this.props;
+    const {tabLabel, timeSpan} = this.props;
     this.storeName = tabLabel;
-    this.state=({
-      timeSpan: TimeSpans[0]
-    })
+    this.timeSpan = timeSpan;
     console.log('storeName:' + this.storeName);
   }
 
   componentDidMount() {
+    console.log('componentDidMount')
     this.loadData(false);
+    this.timeSpanChangeListener = DeviceEventEmitter.addListener(EVENT_TYPE_TIME_SPAN_CHANGE, (timeSpan) => {
+      this.timeSpan = timeSpan;
+      this.loadData(false);
+    })
+  }
+  componentWillUnmount() {
+    console.log('componentDidMount')
+    if(this.timeSpanChangeListener) {
+      this.timeSpanChangeListener.remove();
+    }
   }
 
   loadData(isLoadMore) {
@@ -168,8 +184,9 @@ class TrendingTab extends React.Component {
   }
 
   getFetchURL(key) {
-    // console.log("QUERY_TIME, KEY" + QUERY_TIME + key);
-    return URL + key + '?since=daily';
+    const url = URL + key + '?' + this.timeSpan.searchText;
+    console.log('getFetchURL: ' + url);
+    return url
   }
 
   renderItem(data) {
@@ -178,7 +195,9 @@ class TrendingTab extends React.Component {
       <TrendingItem
         item={item}
         onSelect={()=> {
-
+          NavigationUtil.goTo('DetailPage', {
+            item: item,
+          })
         }}
       />
     )
@@ -213,10 +232,12 @@ class TrendingTab extends React.Component {
                   )}
                   ListFooterComponent={() => this.getIndicator()}
                   onEndReached={()=>{
-                    this.loadData(true);
+                    setTimeout(()=>{
+                      this.loadData(true);
+                    }, 1000)
                   }}
 
-                  onEndReachedThreshold={0.5}
+                  onEndReachedThreshold={0}
         />
         <Toast ref={'toast'}
                position={'center'}

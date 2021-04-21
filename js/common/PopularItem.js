@@ -4,13 +4,12 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default class PopularItem extends React.Component {
   render() {
-    const {item} = this.props;
+    const {item, onSelect} = this.props;
     if (!item || !item.owner) return null;
     let favoriteButton =
       <TouchableOpacity
         style={{padding: 6}}
-        onPress={() =>{
-        }}
+        // onPress={}
         underlayColor={'transparent'}>
         <FontAwesome
           name={'star-o'}
@@ -19,7 +18,9 @@ export default class PopularItem extends React.Component {
         />
       </TouchableOpacity>
     return (
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={onSelect}
+      >
         <View style={styles.cell_container}>
           <Text style={styles.title}>
             {item.full_name}
