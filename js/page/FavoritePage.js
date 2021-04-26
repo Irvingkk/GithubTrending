@@ -121,7 +121,6 @@ class FavoriteTab extends React.Component {
     if (this.storeName === FLAG_STORAGE.flag_popular) {
       EventBus.getInstance().fireEvent(EventTypes.favorite_changed_popular);
     } else {
-      console.log('fire a trending event');
       EventBus.getInstance().fireEvent(EventTypes.favorite_changed_trending);
     }
   }
