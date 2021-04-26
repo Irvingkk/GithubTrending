@@ -1,6 +1,7 @@
 import types from "../types"
 import DataStore, {FLAG_STORAGE} from "../../expand/dao/DataStore";
 import handleData, { _projectModels } from "../actionUtil";
+import { Type } from "react-native/ReactCommon/hermes/inspector/tools/msggen/src/Type";
 
 /**
  * return an async dispatch action
@@ -67,3 +68,37 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray= [],
     }, 500);
   }
 }
+
+export function onFlushPopularFavorite(storeName, pageIndex, pageSize, dataArray= [], favoriteDao) {
+  return dispatch => {
+    let max = pageIndex * pageSize > dataArray.length? dataArray.length: pageIndex * pageSize;
+    _projectModels(dataArray.slice(0, max), favoriteDao, (projectModels)=>{
+      dispatch({
+        type: types.FLUSH_POPULAR_FAVORITE,
+        storeName,
+        pageIndex,
+        projectModels: projectModels,
+      })
+    })
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

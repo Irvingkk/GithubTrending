@@ -23,6 +23,8 @@ import TrendingDialog, {TimeSpans} from "../common/TrendingDialog";
 import FavoriteDao from "../expand/dao/FavoriteDao";
 import { FLAG_STORAGE } from "../expand/dao/DataStore";
 import FavoriteUtil from "../util/FavoriteUtil";
+import EventBus from "react-native-event-bus";
+import EventTypes from "../util/EventTypes";
 
 const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_trending);
 const URL = 'https://github.com/trending/';
@@ -138,6 +140,7 @@ class TrendingTab extends React.Component {
     const {tabLabel, timeSpan} = this.props;
     this.storeName = tabLabel;
     this.timeSpan = timeSpan;
+    this.isFavoriteChange = false;
     console.log('storeName:' + this.storeName);
   }
 
@@ -148,22 +151,37 @@ class TrendingTab extends React.Component {
       this.timeSpan = timeSpan;
       this.loadData(false);
     })
+
+    // set EventBus listeners
+    EventBus.getInstance().addListener(EventTypes.favorite_changed_trending, this.onFavoriteTrendingChangeListener = data=>{
+      this.isFavoriteChange = true;
+    })
+    EventBus.getInstance().addListener(EventTypes.bottom_tab_select, this.onBottomTabChangeListener = data=>{
+      if(data.to === 1 && this.isFavoriteChange) {
+        this.loadData(null, true);
+      }
+    })
   }
   componentWillUnmount() {
     console.log('componentDidMount')
     if(this.timeSpanChangeListener) {
       this.timeSpanChangeListener.remove();
     }
+
+    EventBus.getInstance().removeListener(this.onFavoriteTrendingChangeListener);
+    EventBus.getInstance().removeListener(this.onBottomTabChangeListener);
   }
 
-  loadData(isLoadMore) {
-    const {onRefreshTrending, onLoadMoreTrending} = this.props;
+  loadData(isLoadMore, flushFavorite) {
+    const {onRefreshTrending, onLoadMoreTrending, onFlushTrendingFavorite} = this.props;
     const store = this.getStore();
 
     if (isLoadMore) {
       onLoadMoreTrending(this.storeName, ++store.pageIndex, pageSize, store.items, favoriteDao, (message)=>{
         this.refs.toast.show(message);
       });
+    } else if (flushFavorite){
+      onFlushTrendingFavorite(this.storeName, store.pageIndex, pageSize, store.items, favoriteDao);
     } else {
       console.log('store: ' + store);
       onRefreshTrending(this.storeName, this.getFetchURL(this.storeName), pageSize, favoriteDao);
@@ -261,6 +279,8 @@ const mapDispatchToProps = dispatch => ({
   onRefreshTrending: (storeName, url, pageSize, favoriteDao) => dispatch(actions.onRefreshTrending(storeName, url, pageSize, favoriteDao)),
   onLoadMoreTrending: (storeName, pageIndex, pageSize, dataArray, favoriteDao, callBack) =>
     dispatch(actions.onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray, favoriteDao, callBack)),
+  onFlushTrendingFavorite: (storeName, pageIndex, pageSize, dataArray, favoriteDao) =>
+    dispatch(actions.onFlushTrendingFavorite(storeName, pageIndex, pageSize, dataArray, favoriteDao)),
 });
 
 const TrendingTabPage = connect(mapStateToProps, mapDispatchToProps)(TrendingTab);

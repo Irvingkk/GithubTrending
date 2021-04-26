@@ -13,6 +13,8 @@ import FavoriteDao from "../expand/dao/FavoriteDao";
 import { FLAG_STORAGE } from "../expand/dao/DataStore";
 import FavoriteUtil from "../util/FavoriteUtil";
 import TrendingItem from "../common/TrendingItem";
+import EventBus from "react-native-event-bus";
+import EventTypes from "../util/EventTypes";
 
 const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular);
 const URL = 'https://api.github.com/search/repositories?q='
@@ -77,12 +79,21 @@ class FavoriteTab extends React.Component {
     super(props);
     const {flag } = this.props;
     this.storeName = flag;
-    const favoriteDao = new FavoriteDao(flag);
+    this.favoriteDao = new FavoriteDao(flag);
     console.log('storeName:' + this.storeName);
   }
 
   componentDidMount() {
     this.loadData(false);
+    EventBus.getInstance().addListener(EventTypes.bottom_tab_select, this.listener = data =>{
+      if (data.to === 2) {
+        this.loadData(false);
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    EventBus.getInstance().removeListener(this.listener)
   }
 
   loadData(isShowLoading) {
@@ -105,6 +116,16 @@ class FavoriteTab extends React.Component {
     return store;
   }
 
+  onFavorite(item, isFavorite){
+    FavoriteUtil.onFavorite(this.favoriteDao, item, isFavorite, this.storeName);
+    if (this.storeName === FLAG_STORAGE.flag_popular) {
+      EventBus.getInstance().fireEvent(EventTypes.favorite_changed_popular);
+    } else {
+      console.log('fire a trending event');
+      EventBus.getInstance().fireEvent(EventTypes.favorite_changed_trending);
+    }
+  }
+
   renderItem(data) {
     const item = data.item;
     const Item = this.storeName === FLAG_STORAGE.flag_popular? PopularItem: TrendingItem;
@@ -118,7 +139,7 @@ class FavoriteTab extends React.Component {
             callback: callback
           })
         }}
-        onFavorite={(item, isFavorite) => FavoriteUtil.onFavorite(favoriteDao, item, isFavorite, this.storeName)}
+        onFavorite={(item, isFavorite) => this.onFavorite(item, isFavorite)}
       />
     )
   }

@@ -8,7 +8,9 @@ import ProjectModel from "../../model/ProjectModel";
  */
 export function onLoadFavoriteData(flag, isShowLoading) {
   return dispatch=> {
-    dispatch({type: Types.FAVORITE_LOAD_DATA, storeName: flag,});
+    if(isShowLoading) {
+      dispatch({type: Types.FAVORITE_LOAD_DATA, storeName: flag,});
+    }
     const favoriteDao = new FavoriteDao(flag);
     favoriteDao.getAllItems()
       .then(data=>{
