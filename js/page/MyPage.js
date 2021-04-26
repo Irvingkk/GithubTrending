@@ -1,11 +1,14 @@
 import React from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { onThemeChange } from "../action/theme";
 import {connect} from "react-redux";
 import NavigationUtil from "../navigator/NavigationUtil";
 import NavigationBar from "../common/NavigationBar";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
+import { MORE_MENU } from "../common/MORE_MENU";
+import ViewUtil from "../util/ViewUtil";
+import GlobalStyles from "../res/GlobalStyles";
 const THEME_COLOR = '#678';
 
 
@@ -38,7 +41,24 @@ class MyPage extends React.Component{
           </View>
         </TouchableOpacity>
   }
+// https://coding.m.imooc.com/classindex.html?cid=304
+  onClick(menu) {
+    let RouteName, params = {};
+    switch(menu) {
+      case MORE_MENU.Tutorial:
+        RouteName='WebViewPage';
+        params.title = 'Tutorial';
+        params.url= 'www.google.com';
+        break;
+    }
+    if (RouteName) {
+      NavigationUtil.goTo(RouteName, params);
+    }
+  }
 
+  getItem(menu) {
+    return ViewUtil.getMenuItem(()=>{this.onClick(menu)}, menu, THEME_COLOR);
+  }
   render() {
     let statusBar = {
       backgroundColor: THEME_COLOR,
@@ -52,45 +72,95 @@ class MyPage extends React.Component{
       leftButton={this.getLeftButton()}
     />
     const {navigation} = this.props;
+
     return (
-      <View style={styles.container}>
+      <View style={GlobalStyles.root_container}>
         {navigationBar}
-        <Text style={styles.welcome}>MyPage</Text>
-        <Button title={'change theme'} onPress={()=>{
-          // navigation.setParams({
-          //   theme: {
-          //     tintColor: 'red',
-          //     updateTime: new Date().getTime()
-          //   }
-          // })
-          this.props.onThemeChange('red');
-        }}/>
-        <Text style={styles.welcome} onPress={() => {
-          NavigationUtil.goTo( 'DetailPage',{navigation: this.props.navigation},)
-        }}>jump to DetailPage</Text>
-        <Button title={'useFetch'} onPress={()=>{
-          NavigationUtil.goTo( 'FetchDemoPage',{navigation: this.props.navigation});
-        }} />
-        <Button title={'useAsyncStorage'} onPress={()=>{
-          NavigationUtil.goTo( 'AsyncStorageDemoPage',{navigation: this.props.navigation});
-        }} />
-        <Button title={'data cache system demo'} onPress={()=>{
-          NavigationUtil.goTo( 'DataStoreDemoPage',{navigation: this.props.navigation});
-        }} />
+        <ScrollView>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => this.onClick(MORE_MENU.About)}
+          >
+            <View style={styles.about_left}>
+              <Ionicons
+                name={MORE_MENU.About.icon}
+                size={40}
+                style={{
+                  marginRight: 10,
+                  color: THEME_COLOR,
+                }}
+              />
+              <Text>GitHub Popular</Text>
+            </View>
+            <Ionicons
+              name={'ios-arrow-forward'}
+              size={16}
+              style={{
+                marginRight: 10,
+                alignSelf: 'center',
+                color: THEME_COLOR,
+              }}/>
+          </TouchableOpacity>
+          <View style={GlobalStyles.line} />
+          {this.getItem(MORE_MENU.Tutorial)}
+          {/*trending manage*/}
+          <Text style={styles.groupTitle}>Trending Mode</Text>
+          {/*pick language*/}
+          {this.getItem(MORE_MENU.Custom_Language)}
+          {/*language rank*/}
+          <View style={GlobalStyles.line}/>
+          {this.getItem(MORE_MENU.Sort_Language)}
+
+          {/*Popular Management*/}
+          <Text style={styles.groupTitle}>Popular Mode</Text>
+          {/*pick tag*/}
+          {this.getItem(MORE_MENU.Custom_Key)}
+          {/*tag rank*/}
+          <View style={GlobalStyles.line}/>
+          {this.getItem(MORE_MENU.Sort_Key)}
+          {/*remove tag*/}
+          <View style={GlobalStyles.line}/>
+          {this.getItem(MORE_MENU.Remove_Key)}
+
+          {/*Setting*/}
+          <Text style={styles.groupTitle}>Setting</Text>
+          {/*pick theme*/}
+          {this.getItem(MORE_MENU.Custom_Theme)}
+          {/*about author*/}
+          <View style={GlobalStyles.line}/>
+          {this.getItem(MORE_MENU.About_Author)}
+          <View style={GlobalStyles.line}/>
+          {/*feedback*/}
+          {this.getItem(MORE_MENU.Feedback)}
+          <View style={GlobalStyles.line}/>
+          {this.getItem(MORE_MENU.CodePush)}
+        </ScrollView>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  about_left: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
-  }
+  item: {
+    backgroundColor: 'white',
+    padding: 10,
+    height: 90,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  groupTitle: {
+    marginLeft: 10,
+    marginTop: 10,
+    marginBottom: 5,
+    fontSize: 12,
+    color: 'gray',
+  },
+
 })
 
 const mapDispatchToProps = dispatch => ({
