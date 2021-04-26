@@ -65,7 +65,6 @@ const TABS = { // set bottom tabs router here
 class DynamicTabNavigator extends Component{
   constructor(props) {
     super(props);
-    console.disableYellowBox = true;
   }
 
   _tabNavigator() {

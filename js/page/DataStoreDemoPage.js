@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import DataStore from "../expand/DataStore";
+import DataStore from "../expand/dao/DataStore";
 
 export default class DetailPage extends React.Component{
   constructor(props) {

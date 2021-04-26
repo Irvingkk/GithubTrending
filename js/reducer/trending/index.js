@@ -34,7 +34,7 @@ export default function onAction(state = defaultState, action){
         [action.storeName]: {
           ...[action.storeName],
           items: action.items, // data source
-          projectModes: action.projectModes, // data shown on current page
+          projectModels: action.projectModels, // data shown on current page
           hideLoadingMore: false,
           isLoading: false,
           pageIndex: action.pageIndex,
@@ -54,7 +54,7 @@ export default function onAction(state = defaultState, action){
         ...state,
         [action.storeName]: {
           ...state[action.storeName],
-          projectModes: action.projectModes,
+          projectModels: action.projectModels,
           hideLoadingMore: false,
           pageIndex: action.pageIndex,
         }
@@ -69,7 +69,6 @@ export default function onAction(state = defaultState, action){
         }
       })
     default:
-      console.log('default trending reducer');
       return state;
   }
 }

@@ -1,6 +1,6 @@
 import types from "../types"
-import DataStore, {FLAG_STORAGE} from "../../expand/DataStore";
-import handleData from "../actionUtil";
+import DataStore, {FLAG_STORAGE} from "../../expand/dao/DataStore";
+import handleData, { _projectModels } from "../actionUtil";
 /**
  * return an async dispatch action
  * pass the whole data to reducer but only load the maximum pageSize data
@@ -10,13 +10,13 @@ import handleData from "../actionUtil";
  * @returns {(function(*=): void)|*}
  */
 
-export function onRefreshTrending(storeName, url, pageSize) {
+export function onRefreshTrending(storeName, url, pageSize, favoriteDao) {
   return dispatch => {
     dispatch({type: types.TRENDING_REFRESH, storeName: storeName});
     let dataStore = new DataStore();
     dataStore.fetchData(url, FLAG_STORAGE.flag_trending)
       .then(data =>{
-        handleData(types.TRENDING_REFRESH_SUCCESS, dispatch, data, storeName, pageSize);
+        handleData(types.TRENDING_REFRESH_SUCCESS, dispatch, data, storeName, pageSize, favoriteDao);
       }).catch(e =>{
         dispatch({
           type: types.TRENDING_REFRESH_FAIL,
@@ -36,7 +36,7 @@ export function onRefreshTrending(storeName, url, pageSize) {
  * @param callBack
  * @returns {(function(*): void)|*}
  */
-export function onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray= [], callBack) {
+export function onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray= [], favoriteDao, callBack) {
   return dispatch => {
     setTimeout(()=>{
       console.log('pageIndex, pageSize, dataArray' + pageIndex + ' ' + pageSize + dataArray)
@@ -49,15 +49,17 @@ export function onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray= []
           storeName,
           error: 'no more',
           pageIndex: --pageIndex,
-          projectModes: dataArray
+          projectModels: dataArray
         })
       } else {
         let max = pageIndex * pageSize > dataArray.length? dataArray.length: pageIndex * pageSize;
-        dispatch({
-          type: types.TRENDING_LOAD_MORE_SUCCESS,
-          storeName,
-          pageIndex,
-          projectModes: dataArray.slice(0, max),
+        _projectModels(dataArray.slice(0, max), favoriteDao, (projectModels)=>{
+          dispatch({
+            type: types.TRENDING_LOAD_MORE_SUCCESS,
+            storeName,
+            pageIndex,
+            projectModels: projectModels,
+          })
         })
       }
     }, 500);
