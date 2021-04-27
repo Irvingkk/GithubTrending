@@ -8,10 +8,10 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
 import { MORE_MENU } from "../common/MORE_MENU";
 import ViewUtil from "../util/ViewUtil";
-import GlobalStyles from "../res/GlobalStyles";
+import GlobalStyles from "../res/styles/GlobalStyles";
+
+
 const THEME_COLOR = '#678';
-
-
 class MyPage extends React.Component{
   getRightButton(){
     return <View style={{flexDirection: 'row'}}>
@@ -49,6 +49,12 @@ class MyPage extends React.Component{
         RouteName='WebViewPage';
         params.title = 'Tutorial';
         params.url= 'www.google.com';
+        break;
+      case MORE_MENU.About:
+        RouteName= 'AboutPage';
+        break;
+      case MORE_MENU.About_Author:
+        RouteName = 'AboutMePage';
         break;
     }
     if (RouteName) {

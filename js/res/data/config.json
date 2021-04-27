@@ -1,0 +1,64 @@
+{
+  "aboutMe": {
+    "Tutorial": {
+      "name": "Tutorial",
+      "icon": "ios-bookmarks",
+      "items": [
+        {
+          "title": "React Native",
+          "url": "https://reactnative.dev/docs/tutorial"
+        },
+        {
+          "title": "JavaScript",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"
+        }
+      ]
+    },
+    "Blog": {
+      "name": "Tech Blog",
+      "icon": "ios-laptop",
+      "items": [
+        {
+          "title": "LinkedIn",
+          "url": "https://www.linkedin.com/in/irvineyao/"
+        },
+        {
+          "title": "GitHub",
+          "url": "https://github.com/Irvingkk"
+        }
+      ]
+    },
+    "Contact": {
+      "name": "Contact Info",
+      "icon": "information-circle",
+      "items": {
+        "Hotmail": {
+          "title": "Hotmail",
+          "account": "leonyao97@hotmail.com"
+        },
+        "Gmail": {
+          "title": "Gmail",
+          "account": "irvingyyao@gmail.com"
+        }
+      }
+    }
+  },
+  "info": {
+    "html_url": "https://github.com/crazycodeboy/",
+    "url": "https://api.github.com/repos/crazycodeboy/",
+    "currentRepoUrl": "https://api.github.com/repos/crazycodeboy/GitHubPopular"
+  },
+  "author": {
+    "name": "Irvinekk",
+    "description": "Dedicate to mobile development",
+    "avatar": "http://avatar.csdn.net/1/1/E/1_fengyuzhengfan.jpg",
+    "backgroundImg": "https://www.devio.org/io/GitHubPopular/img/for_githubpopular_about_me.jpg",
+    "url": "https://www.devio.org/"
+  },
+  "app": {
+    "name": "GitHub Trending App",
+    "description": "An across platform app that designed to track and manage the currently most exciting open-source Projects on Github.",
+    "avatar": "https://www.devio.org/io/GitHubPopular/img/ic_app.png",
+    "backgroundImg": "https://www.devio.org/io/GitHubPopular/img/for_githubpopular_about_me.jpg"
+  }
+}

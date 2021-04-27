@@ -10,7 +10,7 @@ export const MORE_MENU = {
   Sort_Key: {name: 'Tag Rank', Icons: MaterialCommunityIcons, icon: 'sort'},
   Remove_Key: {name: 'Remove Tag', Icons: Ionicons, icon: 'md-remove'},
   About_Author: {name: 'About Author', Icons: Octicons, icon: 'smiley'},
-  About: {name: 'About', Icons: Ionicons, icon: 'logo-github'},
+  About: {name: 'About App', Icons: Ionicons, icon: 'logo-github'},
   Tutorial: {name: 'Tutorial', Icons: Ionicons, icon: 'ios-bookmarks'},
   Feedback: {name: 'Feedback', Icons: MaterialIcons, icon: 'feedback'},
   Share: {name: 'Share', Icons: Ionicons, icon: 'md-share'},
