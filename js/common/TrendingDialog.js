@@ -41,6 +41,7 @@ export default class TrendingDialog extends React.Component {
               return (<TouchableOpacity
                 underlayColor={'transparent'}
                 onPress={()=> {onSelect(element)}}
+                key={i}
               >
                 <View style={styles.text_container}>
                   <Text style={styles.text}>{element.showText}</Text>

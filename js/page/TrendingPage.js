@@ -25,6 +25,9 @@ import { FLAG_STORAGE } from "../expand/dao/DataStore";
 import FavoriteUtil from "../util/FavoriteUtil";
 import EventBus from "react-native-event-bus";
 import EventTypes from "../util/EventTypes";
+import { onLoadLanguage } from "../action/language";
+import { FLAG_LANGUAGE } from "../expand/dao/LanguageDao";
+import ArrayUtil from "../util/ArrayUtil";
 
 const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_trending);
 const URL = 'https://github.com/trending/';
@@ -32,26 +35,56 @@ const THEME_COLOR = '#678';
 const pageSize = 10;
 const EVENT_TYPE_TIME_SPAN_CHANGE = 'EVENT_TYPE_TIME_SPAN_CHANGE';
 
-export default class TrendingPage extends React.Component{
+export class TrendingPage extends React.Component{
   constructor(props) {
     super(props);
-    this.tabNames = ['python', 'c'];
     this.state = {
       timeSpan: TimeSpans[0],
     }
+    const {onLoadLanguage} = this.props;
+    onLoadLanguage(FLAG_LANGUAGE.flag_language);
+    this.preKey = [];
   }
 
   _genTabs() {
+    const {languages} = this.props;
     const tabs = {};
-    this.tabNames.forEach((item, index)=>{
-      tabs[`tab${index}`] = {
-        screen: props => <TrendingTabPage {...props} timeSpan={this.state.timeSpan} tabLabel={item}/>,
-        navigationOptions: {
-          tabBarLabel: item
+    this.preKey = languages;
+    debugger
+    languages.forEach((item, index)=>{
+      if(item.checked) {
+        tabs[`tab${index}`] = {
+          screen: props => <TrendingTabPage {...props} timeSpan={this.state.timeSpan} tabLabel={item.name} path={item.path}/>,
+          navigationOptions: {
+            tabBarLabel: item.name
+          }
         }
       }
     })
     return tabs;
+  }
+
+  _tabNav() {
+    /** optimize the timeSpan refreshing, when timeSpan change, only rerender tabs
+      * instead of tab navigator;
+      * Also rerender navigator when tab length updates*/
+    if (!this.tabNav || !ArrayUtil.isEqual(this.preKey, this.props.languages)){
+      this.tabNav = createAppContainer(createMaterialTopTabNavigator(
+        this._genTabs(),{
+          tabBarOptions: {
+            tabStyle: styles.tabStyle,
+            indicatorStyle: styles.indicatorStyle,
+            upperCaseLabel: false,
+            style: {
+              backgroundColor: '#a67'
+            },
+            scrollEnabled: true,
+            labelStyle: styles.labelStyle
+          }
+        }
+      ))
+    }
+    return this.tabNav;
   }
 
   onSelectTimeSpan(timeSpan) {
@@ -91,28 +124,12 @@ export default class TrendingPage extends React.Component{
     )
   }
 
-  _tabNav() {
-    if (!this.tabNav){ // optimize the timeSpan refreshing, only rerender child element,
-      // rather than rerender the whole tab navigation while timeSpan change.
-      this.tabNav = createAppContainer(createMaterialTopTabNavigator(
-        this._genTabs(),{
-          tabBarOptions: {
-            tabStyle: styles.tabStyle,
-            indicatorStyle: styles.indicatorStyle,
-            upperCaseLabel: false,
-            style: {
-              backgroundColor: '#a67'
-            },
-            scrollEnabled: true,
-            labelStyle: styles.labelStyle
-          }
-        }
-      ))
-    }
-    return this.tabNav;
-  }
-
   render() {
+    let {languages}= this.props;
+    if(!languages) {
+      setTimeout(null, 2000);
+      languages = this.props.languages;
+    }
     let statusBar = {
       backgroundColor: THEME_COLOR,
       barStyle: 'light-content'
@@ -123,16 +140,26 @@ export default class TrendingPage extends React.Component{
       style={{backgroundColor: THEME_COLOR}}
     />
 
-    const TabNavigator = this._tabNav();
+    // dynamically create TabNavigator with tabs
+    const TabNavigator = languages.length ? this._tabNav(): null;
     return (
       <View style={styles.container} >
         {navigationBar}
-        <TabNavigator />
+        {TabNavigator ? <TabNavigator />: null}
         {this.renderTrendingDialog()}
       </View>
     )
   }
 }
+
+const mapTrendingStateToProps = state => ({
+  languages: state.Language.languages,
+});
+const mapTrendingDispatchToProps = dispatch => ({
+  onLoadLanguage: (flag) => dispatch(actions.onLoadLanguage(flag)),
+});
+
+export default connect(mapTrendingStateToProps, mapTrendingDispatchToProps)(TrendingPage);
 
 class TrendingTab extends React.Component {
   constructor(props) {
@@ -145,7 +172,6 @@ class TrendingTab extends React.Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount')
     this.loadData(false);
     this.timeSpanChangeListener = DeviceEventEmitter.addListener(EVENT_TYPE_TIME_SPAN_CHANGE, (timeSpan) => {
       this.timeSpan = timeSpan;
@@ -163,7 +189,6 @@ class TrendingTab extends React.Component {
     })
   }
   componentWillUnmount() {
-    console.log('componentDidMount')
     if(this.timeSpanChangeListener) {
       this.timeSpanChangeListener.remove();
     }
@@ -184,15 +209,13 @@ class TrendingTab extends React.Component {
       onFlushTrendingFavorite(this.storeName, store.pageIndex, pageSize, store.items, favoriteDao);
     } else {
       console.log('store: ' + store);
-      onRefreshTrending(this.storeName, this.getFetchURL(this.storeName), pageSize, favoriteDao);
+      onRefreshTrending(this.storeName, this.getFetchURL(this.props.path), pageSize, favoriteDao);
     }
   }
 
   getStore(){
     const {trending} = this.props;
-    console.log("trending: " + trending);
     let store = trending[this.storeName];
-    console.log("trending, this.storeName, store: " + trending + this.storeName + store);
     if (!store) {
       store = {
         items: [],
@@ -201,13 +224,11 @@ class TrendingTab extends React.Component {
         isLoading: false,
       }
     }
-    console.log('store.items' + store.items);
     return store;
   }
 
   getFetchURL(key) {
     const url = URL + key + '?' + this.timeSpan.searchText;
-    console.log('getFetchURL: ' + url);
     return url
   }
 

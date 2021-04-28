@@ -3,6 +3,7 @@ import theme from "./theme/index"
 import popular from "./popular/index"
 import trending from "./trending/index"
 import favorite from "./favorite/index"
+import language from "./language/index"
 
 /**
  * 1.create and combine reducers
@@ -12,6 +13,7 @@ const index = combineReducers({
   Theme: theme,
   Popular: popular,
   Trending: trending,
-  Favorite: favorite
+  Favorite: favorite,
+  Language: language,
 })
 export default index;
