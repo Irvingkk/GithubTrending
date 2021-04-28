@@ -34,7 +34,7 @@ export default class FavoritePage extends React.Component{
       barStyle: 'light-content'
     }
     let navigationBar = <NavigationBar
-      title={'Hot'}
+      title={'Favorite'}
       statusBar={statusBar}
       style={{backgroundColor: THEME_COLOR}}
     />
