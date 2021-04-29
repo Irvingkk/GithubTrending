@@ -9,13 +9,9 @@ Besides, you can save the repos you like and check them in a section. We also ad
 only browse and track your interested types of repos.
 
 ## Screenshots
-![<img src="screenshots/popularPage.jpg"
-width="50" height="50"](screenshots/popularPage.jpg)
-![<img src="screenshots/popularPage.jpg" align="left"
-width="250"
-hspace="10" vspace="10">](screenshots/trendingPage.jpg)
-![](screenshots/trendingTimeSpan.jpg)
-![](screenshots/browser.jpg)
+<img alt="browser" src="/screenshots/browser.jpg" height="500"/>  
+
+![sda](screenshots/trendingTimeSpan.jpg)![dsfa](screenshots/browser.jpg)
 ![](screenshots/favoritePage.jpg)
 ![](screenshots/myPage.jpg)
 ![](screenshots/myPageAbout.jpg)
@@ -47,6 +43,7 @@ hspace="10" vspace="10">](screenshots/trendingPage.jpg)
 - react-native-event-bus                        -- broadcast & receive event
 - react-native-easy-toast                       -- toast message
 - react-native-parallax-scroll-view             -- parallax scroll view
-- react-native-vector-icons                     -- vector icons- react-native-webview                          -- browser inside app
+- react-native-vector-icons                     -- vector icons
+- react-native-webview                          -- browser inside app
 
 
