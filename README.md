@@ -9,8 +9,9 @@ Besides, you can save the repos you like and check them in a section. We also ad
 only browse and track your interested types of repos.
 
 ## Screenshots
-<img alt="popularPage" src="/screenshots/popularPage.jpg" height="400" />   <img alt="browser" src="/screenshots/browser.jpg" height="400"/>
+<img alt="popularPage" src="/screenshots/popularPage.jpg" height="400" />   <img alt="browser" src="/screenshots/browser.jpg" height="400"/>  
 <img alt="trendingPage" src="/screenshots/trendingPage.jpg" height="400"/>   <img alt="trendingTimeSpan" src="/screenshots/trendingTimeSpan.jpg" height="400"/>  
+
 <img alt="favoritePage" src="/screenshots/favoritePage.jpg" height="400"/>  
 <img alt="myPage" src="/screenshots/myPage.jpg" height="400"/>   <img alt="myPageAbout" src="/screenshots/myPageAbout.jpg" height="400"/>  
 
