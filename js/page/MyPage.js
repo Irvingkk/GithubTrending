@@ -9,6 +9,7 @@ import Feather from "react-native-vector-icons/Feather";
 import { MORE_MENU } from "../common/MORE_MENU";
 import ViewUtil from "../util/ViewUtil";
 import GlobalStyles from "../res/styles/GlobalStyles";
+import { FLAG_LANGUAGE } from "../expand/dao/LanguageDao";
 
 
 const THEME_COLOR = '#678';
@@ -50,6 +51,15 @@ class MyPage extends React.Component{
         params.title = 'Tutorial';
         params.url= 'www.google.com';
         break;
+
+      case MORE_MENU.Custom_Language:
+      case MORE_MENU.Custom_Key:
+      case MORE_MENU.Remove_Key:
+        RouteName= 'CustomKeyPage';
+        params.isRemoveKey = menu === MORE_MENU.Remove_Key;
+        params.flag = menu === MORE_MENU.Custom_Language? FLAG_LANGUAGE.flag_language: FLAG_LANGUAGE.flag_tag;
+        break;
+
       case MORE_MENU.About:
         RouteName= 'AboutPage';
         break;

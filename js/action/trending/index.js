@@ -7,6 +7,7 @@ import handleData, { _projectModels } from "../actionUtil";
  * @param storeName
  * @param url
  * @param pageSize
+ * @param favoriteDao
  * @returns {(function(*=): void)|*}
  */
 
@@ -33,6 +34,7 @@ export function onRefreshTrending(storeName, url, pageSize, favoriteDao) {
  * @param pageIndex
  * @param pageSize
  * @param dataArray the data pool
+ * @param favoriteDao
  * @param callBack
  * @returns {(function(*): void)|*}
  */

@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const FAVORITE_KEY_PREFIX = 'favorite_';
 /**
- * only update local storage, instead of redux store
+ * deal with data about the favorite repos
  */
 export default class FavoriteDao {
   constructor(flag) {

@@ -2,6 +2,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import keys from "../../res/data/keys.json"
 import langs from "../../res/data/langs.json"
 
+
+/**
+ * deal with the data about language or technology tabs.
+ * @type {{flag_key: string, flag_language: string}}
+ */
 export const FLAG_LANGUAGE = {flag_language: 'language_dao_language', flag_tag: 'language_dao_tag'};
 export default class LanguageDao {
   constructor(flag) {
@@ -20,7 +25,11 @@ export default class LanguageDao {
   }
 
   save(data){
-    const stringData = JSON.stringify(data);
-    AsyncStorage.setItem(this.flag, stringData);
+    try {
+      const stringData = JSON.stringify(data);
+      AsyncStorage.setItem(this.flag, stringData);
+    } catch (e){
+      console.error(e);
+    }
   }
 }

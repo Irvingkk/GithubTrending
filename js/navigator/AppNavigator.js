@@ -13,6 +13,7 @@ import DataStoreDemoPage from "../page/DataStoreDemoPage"
 import WebViewPage from "../page/WebViewPage";
 import AboutPage from "../page/about/AboutPage";
 import AboutMePage from "../page/about/AboutMePage";
+import CustomKeyPage from "../page/CustomKeyPage";
 
 const InitNavigator = createStackNavigator({
     WelcomePage: {
@@ -50,6 +51,12 @@ const MainNavigator = createStackNavigator({
   },
   AboutMePage: {
     screen: AboutMePage,
+    navigationOptions: {
+      headerShown: false,
+    }
+  },
+  CustomKeyPage: {
+    screen: CustomKeyPage,
     navigationOptions: {
       headerShown: false,
     }

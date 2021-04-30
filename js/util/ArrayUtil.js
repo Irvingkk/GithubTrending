@@ -24,11 +24,56 @@ export default class ArrayUtil{
     if (!(arr1 && arr2)) return false;
     if (arr1.length !== arr2.length) return false;
     let result = true;
-    debugger
     arr1.forEach((item, i) =>{
       result = this.isEqualObject(item, arr2[i]) && result;
     })
-    debugger
     return result;
   }
+
+  /**
+   * add item if it's not in arr; remove item if it's in arr.
+   * @param arr
+   * @param item
+   */
+  static updateArray(arr, item){
+    arr.forEach((elem, index)=>{
+      if (this.isEqualObject(elem, item)){
+        arr.slice(index, 1);
+        return;
+      }
+    })
+    arr.push(item);
+  }
+
+  /**
+   * remove the specified item from arr based on 'item', or item property id 'id'
+   * @param arr
+   * @param item
+   * @param id a string to access property of arr
+   */
+  static remove(arr, item, id) {
+    let i = arr.length - 1;
+    for(; i>= 0; i--){
+      if(arr[i][id]) {
+        arr[i][id] === item[id] && arr.splice(i, 1);
+      } else {
+        arr[i] === item && arr.splice(i, 1);
+      }
+    }
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

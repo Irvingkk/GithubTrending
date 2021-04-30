@@ -51,13 +51,6 @@ export class PopularPage extends React.Component{
 
   render() {
     let {keys} = this.props;
-    // if (!keys){
-    //   debugger
-    //   setTimeout(null, 2000);
-    //   keys = this.props.keys;
-    //   debugger
-    // }
-    console.log(typeof keys);
     let statusBar = {
       backgroundColor: THEME_COLOR,
       barStyle: 'light-content'
@@ -79,7 +72,8 @@ export class PopularPage extends React.Component{
           },
           scrollEnabled: true,
           labelStyle: styles.labelStyle
-        }
+        },
+        lazy: true,
       }
     )): null;
 
@@ -218,10 +212,12 @@ class PopularTab extends React.Component {
                   )}
                   ListFooterComponent={() => this.getIndicator()}
                   onEndReached={()=>{
-                    this.loadData(true);
+                    setTimeout(()=>{
+                      this.loadData(true);
+                    }, 1000)
                   }}
 
-                  onEndReachedThreshold={0.5}
+                  onEndReachedThreshold={0}
         />
         <Toast ref={'toast'}
                position={'center'}

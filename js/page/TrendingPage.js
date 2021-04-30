@@ -49,8 +49,8 @@ export class TrendingPage extends React.Component{
   _genTabs() {
     const {languages} = this.props;
     const tabs = {};
-    this.preKey = languages;
-    debugger
+    this.preKey = {...languages};
+    // debugger
     languages.forEach((item, index)=>{
       if(item.checked) {
         tabs[`tab${index}`] = {
@@ -80,7 +80,8 @@ export class TrendingPage extends React.Component{
             },
             scrollEnabled: true,
             labelStyle: styles.labelStyle
-          }
+          },
+          lazy: true,
         }
       ))
     }

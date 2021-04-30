@@ -2,6 +2,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Trending from "GitHubTrending"
 export const FLAG_STORAGE = {flag_popular: 'popular', flag_trending: 'trending'}
 const AUTO_TOKEN = 'fd82d1e882462e23b8e88aa82198f166';
+/**
+ * deal with data about all the popular and trending repos
+ */
 export default class DataStore {
   /**
    * save springified wraped data to local
