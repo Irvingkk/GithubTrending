@@ -5,7 +5,7 @@ Therefore, the idea of this app is to provide a portable and flexible way to che
 community right on your phone.   
 This app allows you to search the repos by programming languages or the technology such as IOS, ReactJS, and browse 
 repos on the app's build in browser.  
-Besides, you can save the repos you like and check them in a section. We also add filter and subscribe function, which allows you to 
+Besides, you can save the repos you like and check them in a section. I also add filter and subscribe function, which allows you to 
 view and track only your interested repos.
 
 ## Screenshots
