@@ -6,7 +6,7 @@ community right on your phone.
 This app allows you to search the repos by programming languages or the technology such as IOS, ReactJS, and browse 
 repos on the app's build in browser.  
 Besides, you can save the repos you like and check them in a section. We also add filter and subscribe function, which allows you to 
-only browse and track your interested types of repos.
+view and track only your interested repos.
 
 ## Screenshots
 <img alt="popularPage" src="/screenshots/popularPage.jpg" height="400" />   <img alt="browser" src="/screenshots/browser.jpg" height="400"/>  
