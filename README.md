@@ -1,12 +1,11 @@
 ## Github Trending React Native App
-Github Explore is a great feature! On the site, there are thousands of developers each day 
+Github Explore is a great feature! Over there, there are thousands of developers each day 
 to flip through the repositories, and discover the most creative and useful API or projects.
-Therefore, the idea of this app is to provide a portable and flexible way to check of Github 
+Based on that, the idea of this app is to provide a portable and flexible way to check Github 
 community right on your phone.   
-This app allows you to search the repos by programming languages or the technology such as IOS, ReactJS, and browse 
-repos on the app's build in browser.  
-Besides, you can save the repos you like and check them in a section. I also add filter and subscribe function, which allows you to 
-view and track only your interested repos.
+This app allows you to search repositories by programming language or technology such as IOS, ReactJS. Moreover, you are allowed to open 
+any repository to check using this app's build-in browser.  
+Besides, it also supports filtering repositories by author and types, saving your favorite ones, and even subscribing certain authors.
 
 ## Screenshots
 <img alt="popularPage" src="/screenshots/popularPage.jpg" height="400" />   <img alt="browser" src="/screenshots/browser.jpg" height="400"/>  
